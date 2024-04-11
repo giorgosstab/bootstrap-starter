@@ -1,30 +1,26 @@
 {
-  "description": "CRC Bootstrap 4.1 static site",
-  "name": "giorgosstab/bootstrap-starter",
-  "type": "project",
-  "homepage": "http://github.giorgosstab/bootstrap-starter",
-  "license": "MIT",
-  "support": {
-    "source": "https://giorgosstab.github.io/bootstrap-starter"
-  },
-  "require": {
-    "php": ">=5.3.7"
-  },
-  "autoload": {
-    "psr-4": {
-      "App\\": "app",
-      "Core\\": "app/core",
-      "Controllers\\": "app/controllers"
+    "name": "giorgosstab/bootstrap-starter",
+    "type": "project",
+    "description": "Bootstrap starter for static web pages.",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "ext-mbstring": "*",
+        "jenssegers/blade": "^2.0",
+        "vlucas/phpdotenv": "^5.6"
     },
-    "classmap": [
-      "app/core",
-      "app/controllers"
-    ]
-  },
-  "suggest": {
-    "paragonie/random_compat": "Provides better randomness in PHP 5.x"
-  },
-  "require-dev": {
-    "mikey179/vfsstream": "1.1.*"
-  }
+    "autoload": {
+        "files": [
+            "app/Helpers/helper.php"
+        ],
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
