@@ -27,13 +27,13 @@
     @yield('extra-css')
 </head>
 <body>
-    {{--@include('partials.header')--}}
+    @include('partials.header')
 
-{{--    <main id="main">--}}
+    <main id="main">
         @yield('content')
-{{--    </main>--}}
+    </main>
 
-    {{--@include('partials.footer')--}}
+    @include('partials.footer')
 
     <!-- Scripts -->
     <script src="{{ mix('assets/vendor/bootstrap.js') }}"></script>
