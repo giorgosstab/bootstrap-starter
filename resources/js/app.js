@@ -5,3 +5,6 @@
  */
 
 require('./bootstrap');
+
+// Packages
+require('./vendor/remove-uppercase-accents');
