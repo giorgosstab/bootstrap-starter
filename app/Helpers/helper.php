@@ -3,7 +3,9 @@
 use App\Libraries\ConfigManager;
 use App\Libraries\Env;
 use App\Libraries\HtmlPicture;
+use App\Libraries\Request;
 use App\Libraries\TranslatorManager;
+use App\Libraries\ViewFactory;
 use JetBrains\PhpStorm\NoReturn;
 
 if (!function_exists('array_get')) {
@@ -365,6 +367,23 @@ if (!function_exists('public_path')) {
     }
 }
 
+if (!function_exists('request')) {
+    function request(string $key = null, $default = null)
+    {
+        static $instance = null;
+
+        if ($instance === null) {
+            $instance = new Request();
+        }
+
+        if ($key !== null) {
+            return $instance->get($key, $default);
+        }
+
+        return $instance;
+    }
+}
+
 if (!function_exists('resource_path')) {
     /**
      * Get the path to the public folder.
@@ -460,5 +479,14 @@ if (!function_exists('value')) {
     function value(mixed $value): mixed
     {
         return $value instanceof Closure ? $value() : $value;
+    }
+}
+
+if (!function_exists('view')) {
+    function view($view, $data = []): string
+    {
+        $viewFactory = new ViewFactory();
+
+        return $viewFactory->render($view, $data);
     }
 }

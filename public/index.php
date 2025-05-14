@@ -1,7 +1,6 @@
 <?php
 
 use App\Libraries\TranslatorManager;
-use Jenssegers\Blade\Blade;
 
 define('FCPATH', dirname(__DIR__));
 
@@ -12,35 +11,40 @@ require_once '../bootstrap/app.php';
 $application_folder = '../app';
 define('APPPATH', $application_folder.DIRECTORY_SEPARATOR);
 
-// Default file
-$fileName = 'home';
-
-// e.g. index.php?route=home or /home/
-if (isset($_GET['route'])) {
-    $route = explode('/', $_GET['route']);
-
-    $fileName = count($route) === 2
-        ? rtrim($route[1], '/')
-        : rtrim($route[0], '/');
-}
-
-// Set translation manager
+// Set a translation manager
 $trans = new TranslatorManager(current_locale());
 $trans->setFallback(config('app.fallback_locale'));
 $locale = $trans->getLocale();
 
-// Set blade engine
-$view_folder = resource_path('views');
-$cache = storage_path('framework/views');
+// Load routes
+$routes = require_once '../routes/web.php';
 
-$blade = new Blade($view_folder, $cache);
+// Determine a route from URL
+// (e.g. index.php?route=home or /home)
+// (e.g. index.php?route=?route=product/show or /product/show)
+$route = $_GET['route'] ?? 'home';
+$route = trim($route, '/');
 
-try {
-    echo $blade->render($fileName);
-} catch (Exception $e) {
+// Check if route matches a controller
+if (isset($routes[$route])) {
+    $routeAction = $routes[$route];
+
+    if (is_callable($routeAction)) {
+        echo call_user_func($routeAction);
+    } elseif (is_array($routeAction)) {
+        [$controllerClass, $method] = $routeAction;
+
+        if (class_exists($controllerClass) && method_exists($controllerClass, $method)) {
+            $controller = new $controllerClass();
+
+            $response = call_user_func([$controller, $method]);
+
+            echo $response;
+            exit;
+        }
+    }
+} else {
     header("HTTP/1.0 404 Not Found");
-
-    echo $blade->render('errors.404');
-
+    echo view('errors.404');
     die();
 }
